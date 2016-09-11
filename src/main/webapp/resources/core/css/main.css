@@ -1,0 +1,39 @@
+#hangmanKeyboard span{
+	display:			inline-block;
+	padding:			6px 12px;
+	font-size:			2em;
+	border:				1px solid #ccc;
+	margin:				0px 10px 10px 0px;
+	width:				60px;
+	text-align:			center;
+}
+
+#hangmanKeyboard span:hover{
+	background-color:	#777777;
+	color:				white;
+	cursor:				pointer;
+}
+
+.disableSection {
+	display:			none;
+}
+
+#hangmanWords{
+	font-size:			4em;
+}
+
+#hangmanWords span{
+	margin:				10px;
+	border-bottom:		1px solid #777777;
+	width:				1em;
+	display:			inline-block;
+	text-align:			center;
+}
+
+#userName {
+	font-size:			3em;
+}
+
+#hangmanInGameDetails {
+	font-size:			2em;
+}
