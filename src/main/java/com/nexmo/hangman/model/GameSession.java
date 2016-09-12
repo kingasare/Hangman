@@ -16,19 +16,11 @@ public class GameSession extends AbstractGameSession {
 		this.setUser(user);
 		this.setNumberOfRemainingAttempts(maxNumberOfAttempts);
 	}
-	
-	public void generateDummyWord(){
-		
-	}
-	
-	public void updateDummyWord(){
-		
-	}
 
 	public void reduceRemainingAttempts(int maxNumberOfAttempts){
 		this.numberOfRemainingAttempts--;
 		if(this.numberOfRemainingAttempts == 0){
-			this.setCurrentGameState(GameState.LOST_STATE);
+			this.setCurrentGameState(GameState.FAIL_STATE);
 		}
 	}
 
@@ -59,7 +51,4 @@ public class GameSession extends AbstractGameSession {
 	public void setCurrentWord(String currentWord) {
 		this.currentWord = currentWord;
 	}
-
-
-
 }

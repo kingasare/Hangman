@@ -14,26 +14,29 @@ public abstract class AbstractGameSession implements Serializable{
 	private String dummyWord;
 	private GameState currentGameState;
 	private User user;
-	private List<String> sucessfulLetters;
+	private List<String> successfulLetters = new ArrayList<String>();
+	private List<String> unSuccessfulLetters = new ArrayList<String>();
 
-	public AbstractGameSession(){
-		sucessfulLetters = new ArrayList<String>();
-	}
 	public int getNumberOfRemainingAttempts() {
 		return numberOfRemainingAttempts;
 	}
+
 	public void setNumberOfRemainingAttempts(int numberOfRemainingAttempts) {
 		this.numberOfRemainingAttempts = numberOfRemainingAttempts;
 	}
+
 	public String getDummyWord() {
 		return dummyWord;
 	}
+
 	public void setDummyWord(String dummyWord) {
 		this.dummyWord = dummyWord;
 	}
+
 	public GameState getCurrentGameState() {
 		return currentGameState;
 	}
+
 	public void setCurrentGameState(GameState currentGameState) {
 		this.currentGameState = currentGameState;
 	}
@@ -57,10 +60,26 @@ public abstract class AbstractGameSession implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public List<String> getSucessfulLetters() {
-		return sucessfulLetters;
+
+	public List<String> getSuccessfulLetters() {
+		return successfulLetters;
 	}
-	public void setSucessfulLetters(List<String> sucessfulLetters) {
-		this.sucessfulLetters = sucessfulLetters;
+
+	public void setSuccessfulLetters(List<String> successfulLetters) {
+		this.successfulLetters = successfulLetters;
+	}
+
+	/**
+	 * @return the unSuccessfulLetters
+	 */
+	public List<String> getUnSuccessfulLetters() {
+		return unSuccessfulLetters;
+	}
+
+	/**
+	 * @param unSuccessfulLetters - the unsuccessful letters to set
+	 */
+	public void setUnSuccessfulLetters(List<String> unSuccessfulLetters) {
+		this.unSuccessfulLetters = unSuccessfulLetters;
 	}
 }

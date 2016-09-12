@@ -10,7 +10,7 @@ import com.nexmo.hangman.service.GameService;
 import com.nexmo.hangman.service.impl.GameServiceImpl;
 
 @Configuration
-@PropertySource("classpath:config/config.properties")
+@PropertySource(value="classpath:/config/config.properties", ignoreResourceNotFound = true)
 @ComponentScan(basePackages="com.nexmo.hangman")
 public class AppConfiguration {
 

@@ -41,20 +41,19 @@
 				</div>
 			</div>
 			<div class="row">
-				<span style="text-align: center" id="userName"></span>
+				<span style="text-align: center; display: block;" id="userName"></span>
 			</div>
 			<div class="row" id="hangmanInGameDetails">
-				<span style="float:left;">Remaining Attempts: <span class="label label-default" id="hangmanRemainingAttempts">7</span></span>
+				<span>Remaining Attempts: <span class="label label-default" id="hangmanRemainingAttempts">7</span></span>
 			</div>
 			<div class="row" id="hangmanGame">
-				<div class="col-md-8" id="hangmanImage"></div>
-				<div class="col-md-4" id="hangmanKeyboard"></div>
+				<div class="col-md-7" id="hangmanImage"></div>
+				<div class="col-md-5" id="hangmanKeyboard"></div>
 			</div>
+			<div class="row" id="hangmanUsedAttempts"></div>
 			<div class="row" id="hangmanWords"></div>
 		</div>
-		
-		
-		
+
 		<spring:url value="/resources/core/js/app.js" var="appJs" />
 		<spring:url value="/resources/vendors/bootstrap/js/bootstrap.min.js" var="bootstrapJs" />
 		<spring:url value="/resources/vendors/jquery/jquery-3.1.0.min.js" var="jquery" />

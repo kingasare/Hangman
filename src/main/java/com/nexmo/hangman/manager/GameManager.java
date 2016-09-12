@@ -36,7 +36,7 @@ public class GameManager implements Serializable {
 	private ArrayList<String> wordList = new ArrayList<String>();
 	private HashMap<String, GameSession> gameSessions = new HashMap<String, GameSession>();
 
-	@Value("classpath:wordList/wordList.txt")
+	@Value("classpath:/wordList/wordList.txt")
 	private Resource wordListResource;
 
 	@Value("${hangman.gameSessionLocation}")
@@ -64,7 +64,7 @@ public class GameManager implements Serializable {
 			try (
 					InputStream in = wordListResource.getInputStream();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-				){
+			){
 
 				String word;
 				while((word = reader.readLine()) != null){
@@ -105,8 +105,8 @@ public class GameManager implements Serializable {
 			gameSession.setWordID(wordID);
 			gameSession.setCurrentWord(getWord(wordID));
 			gameSession.setDummyWord(generateDummyWord(wordID));
-			gameSession.setCurrentGameState(GameState.PLAYING_STATE);	
-			
+			gameSession.setCurrentGameState(GameState.PLAYABLE_STATE);
+
 			this.gameSessions.put(ipAddress, gameSession);
 		}
 
@@ -130,7 +130,7 @@ public class GameManager implements Serializable {
 	}
 
 	public boolean makeAttempt(String ipAddress, String letter) throws Exception{
-		if(StringUtils.hasText(ipAddress) && StringUtils.hasText(letter) && getGameSession(ipAddress) != null){
+		if(StringUtils.hasText(ipAddress) && StringUtils.hasText(letter) && getGameSession(ipAddress) != null && getGameSession(ipAddress).getNumberOfRemainingAttempts() > 0){
 			GameSession gameSession = getGameSession(ipAddress);
 			String currentWord = gameSession.getCurrentWord();
 			String dummyWord = gameSession.getDummyWord();
@@ -138,13 +138,16 @@ public class GameManager implements Serializable {
 			if(currentWord.contains(letter) && !(dummyWord.contains(letter))){
 				String newDummyWord = generateNewDummyWord(currentWord, dummyWord, letter);
 				this.gameSessions.get(ipAddress).setDummyWord(newDummyWord);
-				this.gameSessions.get(ipAddress).getSucessfulLetters().add(letter);
+				this.gameSessions.get(ipAddress).getSuccessfulLetters().add(letter);
 				if(currentWord.equalsIgnoreCase(newDummyWord)){
 					this.gameSessions.get(ipAddress).setCurrentGameState(GameState.WIN_STATE);
 				}
 				return true;
 			}else{
 				this.gameSessions.get(ipAddress).reduceRemainingAttempts(MAX_NUMBER_OF_ATTEMPTS);
+				if(!this.gameSessions.get(ipAddress).getUnSuccessfulLetters().contains(letter)){
+					this.gameSessions.get(ipAddress).getUnSuccessfulLetters().add(letter);
+				}
 				return false;
 			}
 		}
@@ -196,7 +199,7 @@ public class GameManager implements Serializable {
 						ObjectInputStream ois = new ObjectInputStream(fis);
 						){
 					HashMap<String, GameSession> gsf = (HashMap<String, GameSession>) ois.readObject();
-					
+
 					if(gsf != null) this.gameSessions = gsf;
 				}catch(IOException | ClassNotFoundException e){
 					e.printStackTrace();
@@ -209,7 +212,7 @@ public class GameManager implements Serializable {
 	private void saveGameSessions() throws IOException{
 		if(this.gameSessions != null){
 			String tempDirName = this.gameSessionLocation;
-			
+
 			File tempDir = new File(tempDirName);
 			if(tempDir.isDirectory()){
 				File tempSessionFile = new File(tempDirName + "/" + TEMP_DIR_LOCATION + "/" + TEMP_FILE_FILENAME + "." + TEMP_FILE_EXT);

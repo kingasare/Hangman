@@ -13,7 +13,6 @@ public class HomeController {
 
 	@RequestMapping(value="/")
 	public ModelAndView getHomepage(HttpServletResponse response) throws IOException{
-		// first check whether a game already exists
 		return new ModelAndView("home");
 	}
 }

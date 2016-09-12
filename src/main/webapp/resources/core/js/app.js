@@ -14,10 +14,14 @@ $(function(){
 	var $hangmanLetters = $("#hangmanKeyboard > span");
 	var $hangmanRemainingAttempts = $("#hangmanRemainingAttempts");
 	var $hangmanWords = $("#hangmanWords");
+	var $hangmanUsedAttempts = $("#hangmanUsedAttempts");
 
 	$beginButton.click(beginGame);
+	$startNewGameBtn.click(startNewGame);
 	init();
 
+	//TODO: Since we are not passing any information to server,
+	// Could handle this operation when serving the jsp page in HomeController.
 	function init(){
 		$.ajax({
 			url: "game/retrieveExistingGame",
@@ -42,6 +46,11 @@ $(function(){
 		});
 	}
 
+	function startNewGame(){
+		$mainGameWindow.addClass("disableSection");
+		$loginWindow.removeClass("disableSection");
+	}
+
 	function beginGame(){
 		var _username = $userNameText.val().trim();
 		if(_username || _username.length != 0 ){
@@ -53,8 +62,6 @@ $(function(){
 				data: {username : _username},
 				})
 				.done(function(inGameSession) {
-					debugger;
-					//gameSettings.hangMan
 					if(inGameSession != null) {
 						$mainGameWindow.removeClass("disableSection");
 						$loginWindow.addClass("disableSection");
@@ -64,7 +71,6 @@ $(function(){
 					}
 				})
 				.fail(function( jqXHR, textStatus ) {
-					debugger;
 					alert( "Request failed: " + textStatus );
 				});
 		}else{
@@ -78,24 +84,33 @@ $(function(){
 		updateHangmanImage(inGameSession.hangmanImgPath);
 		updateHangManWord(inGameSession.dummyWord);
 		updateUser(inGameSession.user.userName);
-		generateKeyboard(inGameSession.sucessfulLetters);
+		generateKeyboard(inGameSession.successfulLetters);
+		displayUnsuccessfulLetters(inGameSession.unSuccessfulLetters);
+		if(!isPlayable(inGameSession.currentGameState)){
+			$hangmanLetters.unbind("click");
+		}
 	}
 
 	function updateFailInGameSession(inGameSession){
-		//Update just the image
 		updateRemainingAttempt(inGameSession.numberOfRemainingAttempts);
+		displayUnsuccessfulLetters(inGameSession.unSuccessfulLetters);
 		updateHangmanImage(inGameSession.hangmanImgPath);
-		if(inGameSession.currentGameState == "LOST_STATE"){
+		if(!isPlayable(inGameSession.currentGameState)){
 			$hangmanLetters.unbind("click");
 			// display error message
+			alert("Sorry you lost the game");
 		}
+	}
+
+	function isPlayable(currentGameState){
+		return currentGameState === "PLAYABLE_STATE";
 	}
 
 	function updateSuccessInGameSession(inGameSession){
 		updateHangManWord(inGameSession.dummyWord);
 		if(inGameSession.currentGameState == "WIN_STATE"){
 			$hangmanLetters.unbind("click");
-			alert("Well Done");
+			alert("Congratulation you won the game");
 		}
 	}
 
@@ -108,47 +123,62 @@ $(function(){
 	}
 
 	function updateHangManWord(word){
-		var htmlWord = "";
-		for(i = 0; i < word.length; i++){
-			if(word[i] != "_"){
-				htmlWord += "<span class='word'>" + word[i] + "</span>";
-			}else {
-				htmlWord += "<span class='word'>&#160;</span>";
+		if(word != null && word.length > 0){
+			var htmlText = "";
+			for(i = 0; i < word.length; i++){
+				if(word[i] != "_"){
+					htmlText += "<span class='word'>" + word[i] + "</span>";
+				}else {
+					htmlText += "<span class='word'>&#160;</span>";
+				}
 			}
+			$hangmanWords.empty().append(htmlText);
 		}
-		$hangmanWords.empty().append(htmlWord);
 	}
 
 	function generateKeyboard(restrictedLetters){
 		var alphabet = "abcdefghijklmnopqrstuvwxyz";
-		var htmlWord = "";
+		var htmlText = "";
 
 		for(x = 0; x < alphabet.length; x++){
 			var letter = alphabet.charAt(x);
 			if(!((restrictedLetters != null) 
 					&& (restrictedLetters.length > 0) 
 					&& restrictedLetters.includes(letter))){
-				htmlWord += "<span>" + letter + "</span>"
+				htmlText += "<span>" + letter + "</span>"
 			}
 		}
 
-		$hangmanKeyboard.empty().append(htmlWord);
+		$hangmanKeyboard.empty().append(htmlText);
 		$hangmanLetters = $("#hangmanKeyboard > span");
 		$hangmanLetters.click(submitAttempt);
 	}
+
 	function updateHangmanImage(url){
-		debugger;
 		image = new Image();
 		image.src = url + "?" + Math.random();
 		image.onload = function () {
 			$hangmanImage.empty().append(image);
 		};
-	
+
 		image.onerror = function () {
 			$hangmanImage.empty().html('Error Occured <br /> Unable to retrieve Hangman Image');
 		}
 
 		$hangmanImage.empty().html('Loading...');
+	}
+
+	function displayUnsuccessfulLetters(unsuccessfulLetters){
+		if(unsuccessfulLetters != null && unsuccessfulLetters.length > 0 ){
+			var htmlText = "";
+			for(y = 0; y < unsuccessfulLetters.length; y++){
+				htmlText += "<span>" + unsuccessfulLetters[y] + "</span>";
+			}
+
+			$hangmanUsedAttempts.empty().append(htmlText);
+		}else{
+			$hangmanUsedAttempts.empty();
+		}
 	}
 
 	function submitAttempt(){

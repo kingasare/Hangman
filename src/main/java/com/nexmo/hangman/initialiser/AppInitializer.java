@@ -16,12 +16,9 @@ public class AppInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.setConfigLocation("com.nexmo.hangman.config");
-	
 		servletContext.addListener(new ContextLoaderListener(rootContext));
-		
-
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(rootContext));
-        dispatcher.setLoadOnStartup(1);
-        dispatcher.addMapping("/");
+		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(rootContext));
+		dispatcher.setLoadOnStartup(1);
+		dispatcher.addMapping("/");
 	}
 }

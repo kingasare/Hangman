@@ -42,11 +42,6 @@ public class GameServiceImpl implements GameService {
 		return createInGameSession(gameSession);
 	}
 
-	@Override
-	public boolean checkGameSessionExists(String ipAddress) {
-		return gameManager.containsGameSession(ipAddress);
-	}
-	
 	private InGameSession createInGameSession(GameSession gameSession){
 		InGameSession inGameSession = null;
 		if(gameSession!= null){
@@ -56,7 +51,8 @@ public class GameServiceImpl implements GameService {
 			inGameSession.setDummyWord(gameSession.getDummyWord());
 			inGameSession.setCurrentGameState(gameSession.getCurrentGameState());
 			inGameSession.setNumberOfRemainingAttempts(gameSession.getNumberOfRemainingAttempts());
-			inGameSession.setSucessfulLetters(gameSession.getSucessfulLetters());
+			inGameSession.setSuccessfulLetters(gameSession.getSuccessfulLetters());
+			inGameSession.setUnSuccessfulLetters(gameSession.getUnSuccessfulLetters());
 		}
 		return inGameSession;
 	}

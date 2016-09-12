@@ -9,6 +9,4 @@ public interface GameService {
 	GameSession getGameSession(String ipAddress);
 	InGameSession makeAttempt(String ipAddress, String letter) throws Exception;
 	InGameSession createGameSession(String ipAddress, String userName);
-	boolean checkGameSessionExists(String ipAddress);
-	
 }
