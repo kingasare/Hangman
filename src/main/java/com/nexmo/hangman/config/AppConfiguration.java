@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import com.nexmo.hangman.manager.GameManager;
 import com.nexmo.hangman.service.GameService;
@@ -18,11 +19,14 @@ public class AppConfiguration {
 	public GameService gameService(){
 		return new GameServiceImpl();
 	}
-	
+
 	@Bean
 	public GameManager gameManager(){
-		//GameManager gameManager = new GameManager();
-		// gameManager.setWordListResource(resourceLoader.getResource("classpath:classpathdata.txt"););
 		return new GameManager();
+	}
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
 }
